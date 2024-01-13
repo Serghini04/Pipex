@@ -6,12 +6,12 @@
 #    By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 21:05:43 by meserghi          #+#    #+#              #
-#    Updated: 2024/01/12 22:36:19 by meserghi         ###   ########.fr        #
+#    Updated: 2024/01/13 14:33:24 by meserghi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 FILE = pipex.c parsing_arg.c utils/ft_split.c utils/ft_strjoin.c \
-	utils/ft_strlen.c utils/ft_strnstr.c
+	utils/ft_strlen.c utils/ft_strnstr.c utils/free_arr.c
 OBJ = ${FILE:.c=.o}
 FLAGS = -Wall -Wextra -Werror
 
