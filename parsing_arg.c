@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/13 21:24:41 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/13 22:03:45 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,12 @@
 char	**find_split_path(char **env)
 {
 	int		i;
-	int		j;
 	char	*path;
 	char	**res;
 
 	i = 0;
-	j = 0;
 	while (env[i])
 	{
-		j = 0;
 		if (ft_strnstr(env[i], "PATH=", 5))
 		{
 			path = ft_strnstr(env[i], "PATH=", 5);
@@ -77,7 +74,7 @@ t_pipex	*parsing_arg(int ac, char **av, char **env)
 		return (NULL);
 	data->cmd1 = ft_split(av[2], ' ');
 	data->cmd2 = ft_split(av[3], ' ');
-	if (!data->cmd1 || !data->cmd2)
+	if (!data->cmd1 || !*data->cmd1 || !data->cmd2 || !*data->cmd2)
 		return (free_struct(data), perror("Split error "), NULL);
 	path = find_split_path(env);
 	if (!path)

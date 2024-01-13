@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/13 21:36:40 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/13 22:44:59 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	child_run_cmd1(t_pipex *data, char **env)
 
 void	child_run_cmd2(t_pipex *data, char *name_oufile, char **env)
 {
-	data->write_fd = open(name_oufile, O_CREAT | O_WRONLY, 0644);
+	data->write_fd = open(name_oufile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (data->write_fd == -1)
 		(perror("Open error "), exit(1));
 	if (dup2(data->fd[0], 0) == -1 || dup2(data->write_fd, 1) == -1)
@@ -40,16 +40,17 @@ void	child_run_cmd2(t_pipex *data, char *name_oufile, char **env)
 	}
 }
 
-// void f()
-// {
-// 	system("leaks pipex");
-// }
+void f()
+{
+	system("leaks pipex");
+}
 
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	*data;
 	int		p;
 
+	atexit(f);
 	data = parsing_arg(ac, av, env);
 	if (!data)
 		return (1);
@@ -60,13 +61,15 @@ int	main(int ac, char **av, char **env)
 		child_run_cmd1(data, env);
 	else
 	{
-		waitpid(p, NULL, 0);
 		p = fork();
 		if (p == -1)
 			(free_struct(data), perror("fork error "), exit(1));
 		if (p == 0)
 			child_run_cmd2(data, av[4], env);
+		wait(0);
 	}
+	close(data->fd[0]);
+	close(data->fd[1]);
 	free_struct(data);
 	return (0);
 }
