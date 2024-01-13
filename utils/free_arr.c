@@ -33,9 +33,9 @@ void	free_struct(t_pipex *data)
 		free(data->path_cmd1);
 	if (data->path_cmd2)
 		free(data->path_cmd2);
-	if (data->cmd1)
+	if (data->cmd1 || *data->cmd1)
 		free_arr(data->cmd1);
-	if (data->cmd2)
+	if (data->cmd2 || *data->cmd2)
 		free_arr(data->cmd2);
 	free(data);
 }
