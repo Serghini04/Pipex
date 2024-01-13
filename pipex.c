@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/13 14:46:36 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/13 15:26:09 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	**find_split_path(char **env)
 	return (res);
 }
 
-void	child_dir_chi_haraka(char **av, char **path, int *fd, char **env)
+void	child_run_cmd1(char **av, char **path, int *fd, char **env)
 {
 	int		read_fd;
 	char	**cmd;
@@ -54,32 +54,51 @@ void	child_dir_chi_haraka(char **av, char **path, int *fd, char **env)
 	(close (read_fd), close(fd[1]), close(fd[0]));
 	cmd_path = checker_cmd(cmd[0], path);
 	if (!cmd_path)
-		(free_arr(path), perror("Cmd2 error "), exit(1));
+		(free_arr(path), free_arr(cmd), perror("Cmd1 error "), exit(1));
 	if (execve(cmd_path, cmd, env) == -1)
-		(free_arr(path), free(cmd_path), perror("Execve error "), exit(1));
+	{
+		(free_arr(path), free(cmd_path), free_arr(cmd));
+		perror("Execve error ");
+		exit(1);
+	}
 }
 
-void	h9(char **av, char **path, int *fd, char **env)
+void	child_run_cmd2(char **av, char **path, int *fd, char **env)
+{
+	char	*cmd_path;
+	char	**cmd;
+	int		write_fd;
+
+	write_fd = open(av[4], O_CREAT | O_WRONLY, 0644);
+	if (write_fd == -1)
+		(free_arr(path), perror("Open error "), exit(1));
+	cmd = ft_split(av[3], ' ');
+	if (!cmd)
+		(free_arr(path), perror("Split error "), exit(1));
+	if (dup2(fd[0], 0) == -1 || dup2(write_fd, 1) == -1)
+		(free_arr(cmd), free_arr(path), perror("Dup error "), exit(1));
+	(close(fd[0]), close(write_fd), close(fd[1]));
+	cmd_path = checker_cmd(cmd[0], path);
+	if (!cmd_path)
+		(free_arr(cmd), free_arr(path), perror("Cmd2 error "), exit(1));
+	if (execve(cmd_path, cmd, env) == -1)
+	{
+		(free_arr(path), free(cmd_path), free_arr(cmd));
+		(perror("Execve error "), exit(1));
+	}
+}
+
+void	parent_exe(char **av, char **path, int *fd, char **env)
 {
 	int		write_fd;
-	char	**cmd;
 	int		p;
 
-	write_fd = open(av[4], O_CREAT | O_WRONLY, 0777);
-	if (write_fd == -1)
-		(perror("Error "), exit(1));
 	p = fork();
 	if (p == -1)
-		(perror("Error "), exit(1));
-	cmd = ft_split(av[3], ' ');
+		(free_arr(path), perror("fork error "), exit(1));
 	if (p == 0)
-	{
-		if (!cmd || dup2(fd[0], 0) == -1 || dup2(write_fd, 1) == -1)
-			(perror("Error "), exit(1));
-		(close(fd[0]), close(write_fd), close(fd[1]));
-		if (execve(checker_cmd(cmd[0], path), cmd, env) == -1)
-			(perror("Error "), exit(1));
-	}
+		child_run_cmd2(av, path, fd, env);
+	wait(0);
 }
 
 int	main(int ac, char **av, char **env)
@@ -99,10 +118,10 @@ int	main(int ac, char **av, char **env)
 	if (p == -1)
 		return (free_arr(path), perror("fork error "), 0);
 	if (p == 0)
-		child_dir_chi_haraka(av, path, fd, env);
+		child_run_cmd1(av, path, fd, env);
 	else
 	{
 		wait(0);
-		h9(av, path, fd, env);
+		parent_exe(av, path, fd, env);
 	}
 }
