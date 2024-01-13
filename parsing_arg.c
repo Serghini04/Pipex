@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/13 22:03:45 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/13 23:01:48 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ t_pipex	*parsing_arg(int ac, char **av, char **env)
 	path = find_split_path(env);
 	if (!path)
 		return (free_struct(data), perror("Split error "), NULL);
-	data->read_fd = open(av[1], O_RDWR);
+	data->read_fd = open(av[1], O_RDONLY);
 	if (data->read_fd == -1)
 		return (free_struct(data), free_arr(path), perror("Open error "), NULL);
 	data->path_cmd1 = checker_cmd(data->cmd1[0], path);

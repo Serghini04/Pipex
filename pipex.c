@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/13 22:44:59 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/13 22:57:09 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,20 +56,19 @@ int	main(int ac, char **av, char **env)
 		return (1);
 	p = fork();
 	if (p == -1)
-		return (free_struct(data), perror("fork error "), 1);
+		(free_struct(data), perror("fork"), exit(EXIT_FAILURE));
 	if (p == 0)
 		child_run_cmd1(data, env);
 	else
 	{
 		p = fork();
 		if (p == -1)
-			(free_struct(data), perror("fork error "), exit(1));
+			(free_struct(data), perror("fork"), exit(1));
 		if (p == 0)
 			child_run_cmd2(data, av[4], env);
-		wait(0);
 	}
-	close(data->fd[0]);
-	close(data->fd[1]);
+	(wait(0), wait(0));
+	(close(data->fd[0]), close(data->fd[1]));
 	free_struct(data);
 	return (0);
 }
