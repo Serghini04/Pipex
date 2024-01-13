@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:53 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/13 17:46:51 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/13 21:18:53 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,28 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 
+typedef struct s_pipex
+{
+	char	**cmd1;
+	char	**cmd2;
+	char	*path_cmd1;
+	char	*path_cmd2;
+	int		fd[2];
+	int		read_fd;
+	int		write_fd;
+}	t_pipex;
+
+void	free_struct(t_pipex *data);
+
+void	child_run_cmd1(t_pipex *data, char **env);
+void	child_run_cmd2(t_pipex *data, char *name_oufile, char **env);
+
 char	**ft_split(char const *s, char c);
 char	*ft_strnstr(char *haystack, char *needle, int len);
 char	*ft_strjoin(char *s1, char *s2);
 int		ft_strlen(char *s);
-char	**parsing_arg(int ac, char **av, char **env);
+t_pipex	*parsing_arg(int ac, char **av, char **env);
 char	*checker_cmd(char *str, char **path);
 void	free_arr(char **res);
-void	free_all_arr(char **s1, char **s2, char **s3);
+
 #endif

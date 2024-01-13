@@ -6,100 +6,67 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/13 17:47:53 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/13 21:36:40 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	child_run_cmd1(char **av, char **path, int *fd, char **env)
+void	child_run_cmd1(t_pipex *data, char **env)
 {
-	int		read_fd;
-	char	**cmd;
-	char	*cmd_path;
-
-	read_fd = open(av[1], O_RDWR);
-	if (read_fd == -1)
-		(free_arr(path), perror("Open error "), exit(1));
-	cmd = ft_split(av[2], ' ');
-	if (!cmd)
-		(free_arr(path), perror("Split error "), exit(0));
-	if (dup2(read_fd, 0) == -1 || dup2(fd[1], 1) == -1)
-		(free_arr(cmd), free_arr(path), perror("Dup error "), exit(1));
-	(close (read_fd), close(fd[1]), close(fd[0]));
-	cmd_path = checker_cmd(cmd[0], path);
-	if (execve(cmd_path, cmd, env) == -1)
+	if (dup2(data->read_fd, 0) == -1 || dup2(data->fd[1], 1) == -1)
+		(free_struct(data), perror("Dup error "), exit(1));
+	(close (data->read_fd), close(data->fd[1]), close(data->fd[0]));
+	if (execve(data->path_cmd1, data->cmd1, env) == -1)
 	{
-		(free_arr(path), free(cmd_path), free_arr(cmd));
+		free_struct(data);
 		perror("Execve error ");
 		exit(1);
 	}
-	exit(0);
 }
 
-void	child_run_cmd2(char **av, char **path, int *fd, char **env)
+void	child_run_cmd2(t_pipex *data, char *name_oufile, char **env)
 {
-	char	*cmd_path;
-	char	**cmd;
-	int		write_fd;
-
-	write_fd = open(av[4], O_CREAT | O_WRONLY, 0644);
-	if (write_fd == -1)
-		(free_arr(path), perror("Open error "), exit(1));
-	cmd = ft_split(av[3], ' ');
-	if (!cmd)
-		(free_arr(path), perror("Split error "), exit(1));
-	if (dup2(fd[0], 0) == -1 || dup2(write_fd, 1) == -1)
-		(free_arr(cmd), free_arr(path), perror("Dup error "), exit(1));
-	(close(fd[0]), close(write_fd), close(fd[1]));
-	cmd_path = checker_cmd(cmd[0], path);
-	if (execve(cmd_path, cmd, env) == -1)
+	data->write_fd = open(name_oufile, O_CREAT | O_WRONLY, 0644);
+	if (data->write_fd == -1)
+		(perror("Open error "), exit(1));
+	if (dup2(data->fd[0], 0) == -1 || dup2(data->write_fd, 1) == -1)
+		(free_arr(data->cmd2), perror("Dup error "), exit(1));
+	(close(data->fd[0]), close(data->write_fd), close(data->fd[1]));
+	if (execve(data->path_cmd2, data->cmd2, env) == -1)
 	{
-		(free_arr(path), free(cmd_path), free_arr(cmd));
+		(free(data->path_cmd2), free_arr(data->cmd2));
 		(perror("Execve error "), exit(1));
 	}
 }
 
-void	parent_exe(char **av, char **path, int *fd, char **env)
-{
-	int		p;
-
-	p = fork();
-	if (p == -1)
-		(free_arr(path), perror("fork error "), exit(1));
-	if (p == 0)
-	{
-		child_run_cmd2(av, path, fd, env);
-	}
-}
-
-void f()
-{
-	system("leaks pipex");
-}
+// void f()
+// {
+// 	system("leaks pipex");
+// }
 
 int	main(int ac, char **av, char **env)
 {
-	char	**path;
-	int		fd[2];
+	t_pipex	*data;
 	int		p;
 
-	atexit(f);
-	path = parsing_arg(ac, av, env);
-	if (!path)
-		return (0);
-	if (pipe(fd) == -1)
-		return (free_arr(path), perror("Pipe error "), 0);
+	data = parsing_arg(ac, av, env);
+	if (!data)
+		return (1);
 	p = fork();
 	if (p == -1)
-		return (free_arr(path), perror("fork error "), 0);
+		return (free_struct(data), perror("fork error "), 1);
 	if (p == 0)
-	{
-		child_run_cmd1(av, path, fd, env);
-	}
+		child_run_cmd1(data, env);
 	else
 	{
-		wait(0);
-		parent_exe(av, path, fd, env);
+		waitpid(p, NULL, 0);
+		p = fork();
+		if (p == -1)
+			(free_struct(data), perror("fork error "), exit(1));
+		if (p == 0)
+			child_run_cmd2(data, av[4], env);
 	}
+	free_struct(data);
+	return (0);
 }
