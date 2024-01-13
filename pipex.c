@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/13 12:40:12 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/13 13:58:58 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,10 @@ int	main(int ac, char **av, char **env)
 	int		p;
 
 	if (ac != 5)
-		return (perror(0), 1);
+		return (perror("Arg error "), 1);
 	path = find_split_path(env);
 	if (!path || parsing_arg(av, path) == 0)
-		return (0);
+		return (free_arr(path), perror("Arg error "), 0);
 	if (pipe(fd) == -1)
 		return (perror("Error "), 0);
 	p = fork();
