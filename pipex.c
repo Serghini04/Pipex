@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/14 13:28:47 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/14 23:04:32 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ int	main(int ac, char **av, char **env)
 {
 	t_pipex	*data;
 	int		p;
-	atexit(d);
+	//atexit(d);
 	data = parsing_arg(ac, av, env);
 	if (!data)
 		return (1);
@@ -63,8 +63,8 @@ int	main(int ac, char **av, char **env)
 		if (p == 0)
 			child_run_cmd2(data, env);
 	}
-	(wait(0), wait(0));
 	(close(data->fd[0]), close(data->fd[1]));
 	free_struct(data);
+	(wait(0), wait(0));
 	return (0);
 }
