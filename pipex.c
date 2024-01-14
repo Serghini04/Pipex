@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/13 22:57:09 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/14 12:12:06 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,30 +40,24 @@ void	child_run_cmd2(t_pipex *data, char *name_oufile, char **env)
 	}
 }
 
-void f()
-{
-	system("leaks pipex");
-}
-
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	*data;
 	int		p;
 
-	atexit(f);
 	data = parsing_arg(ac, av, env);
 	if (!data)
 		return (1);
 	p = fork();
 	if (p == -1)
-		(free_struct(data), perror("fork"), exit(EXIT_FAILURE));
+		(free_struct(data), perror("fork "), exit(1));
 	if (p == 0)
 		child_run_cmd1(data, env);
 	else
 	{
 		p = fork();
 		if (p == -1)
-			(free_struct(data), perror("fork"), exit(1));
+			(free_struct(data), perror("fork "), exit(1));
 		if (p == 0)
 			child_run_cmd2(data, av[4], env);
 	}
