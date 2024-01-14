@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/14 12:12:06 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/14 13:18:51 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,8 @@ void	child_run_cmd1(t_pipex *data, char **env)
 	}
 }
 
-void	child_run_cmd2(t_pipex *data, char *name_oufile, char **env)
+void	child_run_cmd2(t_pipex *data, char **env)
 {
-	data->write_fd = open(name_oufile, O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (data->write_fd == -1)
-		(perror("Open error "), exit(1));
 	if (dup2(data->fd[0], 0) == -1 || dup2(data->write_fd, 1) == -1)
 		(free_arr(data->cmd2), perror("Dup error "), exit(1));
 	(close(data->fd[0]), close(data->write_fd), close(data->fd[1]));
@@ -59,7 +56,7 @@ int	main(int ac, char **av, char **env)
 		if (p == -1)
 			(free_struct(data), perror("fork "), exit(1));
 		if (p == 0)
-			child_run_cmd2(data, av[4], env);
+			child_run_cmd2(data, env);
 	}
 	(wait(0), wait(0));
 	(close(data->fd[0]), close(data->fd[1]));
