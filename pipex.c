@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/14 13:20:06 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/14 13:28:47 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,11 +37,16 @@ void	child_run_cmd2(t_pipex *data, char **env)
 	}
 }
 
+void d()
+{
+	system("leaks pipex");
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	*data;
 	int		p;
-
+	atexit(d);
 	data = parsing_arg(ac, av, env);
 	if (!data)
 		return (1);

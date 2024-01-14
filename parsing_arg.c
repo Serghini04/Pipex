@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/14 13:17:19 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/14 13:40:51 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ char	*checker_cmd(char *str, char **path)
 
 int	open_file(t_pipex *data, char **av)
 {
-	data->read_fd = open(av[1], O_RDONLY);
-	if (data->read_fd == -1)
-		return (perror("Open error "), 0);
 	data->write_fd = open(av[4], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (data->write_fd == -1)
+		return (perror("Open error "), 0);
+	data->read_fd = open(av[1], O_RDONLY);
+	if (data->read_fd == -1)
 		return (perror("Open error "), 0);
 	return (1);
 }
@@ -73,10 +73,10 @@ t_pipex	*parsing_arg(int ac, char **av, char **env)
 	if (!data)
 		return (NULL);
 	if (open_file(data, av) == 0)
-		return (perror("Open error "), NULL);
+		return (free(data), perror("Open error "), NULL);
 	data->cmd1 = ft_split(av[2], ' ');
 	data->cmd2 = ft_split(av[3], ' ');
-	if (!data->cmd1 || !*data->cmd1 || !data->cmd2 || !*data->cmd2)
+	if (!data->cmd1 || !data->cmd2)
 		return (free_struct(data), perror("Split error "), NULL);
 	path = find_split_path(env);
 	if (!path)
