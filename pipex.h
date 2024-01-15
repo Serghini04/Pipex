@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:53 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/15 12:38:45 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/15 13:50:05 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ typedef struct s_pipex
 	int		write_fd;
 }	t_pipex;
 
+int		open_file(t_pipex *data, int ac, char **av);
 void	free_struct(t_pipex *data);
 void	child_run_cmd1(t_pipex *data, char **env);
 void	child_run_cmd2(t_pipex *data, char **env);
