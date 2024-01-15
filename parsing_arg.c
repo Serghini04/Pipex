@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/14 22:33:52 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/15 12:36:39 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,8 @@ char	*checker_cmd(char *str, char **path)
 	char	*res;
 
 	i = 0;
+	if (if_are_path(str) == 1)
+		return (ft_strdup(str));
 	while (path[i])
 	{
 		res = ft_strjoin(path[i], str);
@@ -67,7 +69,7 @@ t_pipex	*parsing_arg(int ac, char **av, char **env)
 	t_pipex	*data;
 	char	**path;
 
-	if (ac != 5)
+	if (ac != 5 || !env)
 		return (perror("Arg error "), NULL);
 	data = malloc(sizeof(t_pipex));
 	if (!data)

@@ -6,13 +6,16 @@
 #    By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 21:05:43 by meserghi          #+#    #+#              #
-#    Updated: 2024/01/14 12:13:04 by meserghi         ###   ########.fr        #
+#    Updated: 2024/01/15 12:39:18 by meserghi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 FILE = pipex.c parsing_arg.c utils/ft_split.c utils/ft_strjoin.c \
-	utils/ft_strlen.c utils/ft_strnstr.c utils/my_free.c
+	utils/ft_strlen.c utils/ft_strnstr.c utils/my_free.c utils/checker_path.c\
+	utils/ft_strdup.c
+
 OBJ = ${FILE:.c=.o}
+
 FLAGS = -Wall -Wextra -Werror
 
 NAME = pipex
