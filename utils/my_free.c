@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 13:54:51 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/14 12:37:21 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/16 21:22:59 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,9 @@ void	free_struct(t_pipex *data)
 		free(data->path_cmd2);
 	if (data->cmd1 || *data->cmd1)
 		free_arr(data->cmd1);
-	if (data->cmd2 || *data->cmd2)
+	if (data->cmd2)
 		free_arr(data->cmd2);
+	close(data->read_fd);
+	close(data->write_fd);
 	free(data);
 }

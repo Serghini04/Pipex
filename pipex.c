@@ -6,11 +6,13 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/15 18:00:39 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/16 18:48:44 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+// this cmd for leaks fd system(lsof -c pipex);
 
 void	child_run_cmd1(t_pipex *data, char **env)
 {
@@ -37,11 +39,16 @@ void	child_run_cmd2(t_pipex *data, char **env)
 	}
 }
 
+void f()
+{
+	system("lsof -c pipex");
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	*data;
 	int		p;
-
+	atexit(f);
 	data = parsing_arg(ac, av, env);
 	if (!data)
 		return (1);
@@ -59,7 +66,9 @@ int	main(int ac, char **av, char **env)
 			child_run_cmd2(data, env);
 	}
 	(close(data->fd[0]), close(data->fd[1]));
+	(close(data->read_fd), close(data->write_fd));
 	free_struct(data);
-	(wait(0), wait(0));
+	wait(0);
+	wait(0);
 	return (0);
 }

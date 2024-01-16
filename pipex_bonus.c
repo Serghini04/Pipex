@@ -12,44 +12,62 @@
 
 #include "pipex.h"
 
-t_pipex	*parsing_arg_bonus(int ac, int i, char **av, char **env)
+void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 {
-	t_pipex	*data;
+	data->cmd1 = ft_split(av[i], ' ');
+	if (!data->cmd1)
+		(free_struct(data), perror("Split error "), exit(1));
+	data->path_cmd1 = checker_cmd(data->cmd1[0], path);
+	if (!data->path_cmd1)
+		(free_struct(data), free_arr(path), perror("Cmd error "), exit(1));
+	if (pipe(data->fd) == -1)
+		(free_struct(data), free_arr(path), perror("Pipe error "), exit(1));
+}
+
+char	**first_part(t_pipex *data, int ac, char **av, char **env)
+{
 	char	**path;
 
-	if (ac < 5 || !*env)
-		return (perror("Arg error "), NULL);
-	data = malloc(sizeof(t_pipex));
-	if (!data)
-		return (NULL);
 	if (open_file(data, ac, av) == 0)
-		return (free(data), perror("Open error "), NULL);
-	data->cmd1 = ft_split(av[i], ' ');
-	data->cmd2 = ft_split(av[i + 1], ' ');
-	if (!data->cmd1 || !data->cmd2)
-		return (free_struct(data), perror("Split error "), NULL);
+		(free(data), perror("Open error "), exit(1));
 	path = find_split_path(env);
 	if (!path)
-		return (free_struct(data), perror("Split error "), NULL);
-	data->path_cmd1 = checker_cmd(data->cmd1[0], path);
-	data->path_cmd2 = checker_cmd(data->cmd2[0], path);
-	if (!data->path_cmd1 || !data->path_cmd2)
-		return (free_struct(data), free_arr(path), perror("Cmd error "), NULL);
-	if (pipe(data->fd) == -1)
-		return (free_struct(data), free_arr(path), perror("Pipe error "), NULL);
-	return (free_arr(path), data);
+		(free_struct(data), perror("Split error "), exit(1));
+	return (path);
+}
+
+void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
+{
+	int  p;
+
+	p = fork();
+	if ( p == -1)
+		(free_struct(data), exit(1));
+	if (p == 0)
+		child_run_cmd1_bonus(data, env, i, ac);
 }
 
 int main(int ac, char **av, char **env)
 {
 	t_pipex *data;
-	int save_read;
-	int	i = 1;
+	char	**path;
+	int 	i = 2;
 
-	while (i < ac - 2)
+	if (ac <= 5 || !*env)
+		return (perror("Arg error "), 1);
+	data = malloc(sizeof(t_pipex));
+	if (!data)
+		return (1);
+	path = first_part(data, ac, av, env);
+	while (i <= ac - 2)
 	{
-		data = parsing_arg_bonus(ac, i, av, env);
-		if (!data)
-			return (0);
+		parsing_arg_bonus(data, i, av, path);
+		part_exe_cmd(data, env, i, ac);
+		dup2(data->fd[0], 0);
+		close(data->fd[1]);
+		close(data->fd[0]);
+		i++;
 	}
+	(close(data->read_fd), close(data->write_fd));
+	return (0);
 }

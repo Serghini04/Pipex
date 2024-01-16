@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/15 18:00:32 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/16 19:36:45 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,15 +55,12 @@ char	*checker_cmd(char *str, char **path)
 
 int	open_file(t_pipex *data, int ac, char **av)
 {
-	if (!data->read_fd || !data->write_fd)
-	{
-		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		if (data->write_fd == -1)
-			return (perror("Open error "), 0);
-		data->read_fd = open(av[1], O_RDONLY);
-		if (data->read_fd == -1)
-			return (perror("Open error "), 0);
-	}
+	data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+	if (data->write_fd == -1)
+		return (perror("Open error "), 0);
+	data->read_fd = open(av[1], O_RDONLY);
+	if (data->read_fd == -1)
+		return (close(data->write_fd), perror("Open error "), 0);
 	return (1);
 }
 
@@ -78,7 +75,7 @@ t_pipex	*parsing_arg(int ac, char **av, char **env)
 	if (!data)
 		return (NULL);
 	if (open_file(data, ac, av) == 0)
-		return (free(data), perror("Open error "), NULL);
+		return (free(data) ,perror("Open error "), NULL);
 	data->cmd1 = ft_split(av[2], ' ');
 	data->cmd2 = ft_split(av[3], ' ');
 	if (!data->cmd1 || !data->cmd2)
