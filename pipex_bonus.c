@@ -15,7 +15,7 @@
 void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 {
 	data->cmd1 = ft_split(av[i], ' ');
-	if (!data->cmd1)
+	if (!data->cmd1 || !*data->cmd1)
 		(free_struct(data), perror("Split error "), exit(1));
 	data->path_cmd1 = checker_cmd(data->cmd1[0], path);
 	if (!data->path_cmd1)
@@ -41,10 +41,18 @@ void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 	int  p;
 
 	p = fork();
+
 	if ( p == -1)
 		(free_struct(data), exit(1));
 	if (p == 0)
 		child_run_cmd1_bonus(data, env, i, ac);
+	else
+		data->pids[i - 2] = p;
+	free_struct(data);
+}
+void f()
+{
+	system ("leaks pipex_bonus");
 }
 
 int main(int ac, char **av, char **env)
@@ -53,21 +61,31 @@ int main(int ac, char **av, char **env)
 	char	**path;
 	int 	i = 2;
 
+	//atexit(f);
 	if (ac <= 5 || !*env)
 		return (perror("Arg error "), 1);
 	data = malloc(sizeof(t_pipex));
 	if (!data)
 		return (1);
 	path = first_part(data, ac, av, env);
+	data->pids = malloc(sizeof(pid_t) * (ac - 3));
+	if (!data->pids)
+		(free_struct(data), exit(1));
 	while (i <= ac - 2)
 	{
 		parsing_arg_bonus(data, i, av, path);
 		part_exe_cmd(data, env, i, ac);
 		dup2(data->fd[0], 0);
-		close(data->fd[1]);
 		close(data->fd[0]);
+		close(data->fd[1]);
 		i++;
 	}
+	i = -1;
+	while (++i < ac - 3)
+		waitpid(data->pids[i], 0, 0);
+	free_arr(path);
+	free(data->pids);
+	free(data);
 	(close(data->read_fd), close(data->write_fd));
 	return (0);
 }

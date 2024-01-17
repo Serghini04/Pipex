@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:53 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/16 21:38:17 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/16 22:03:39 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ typedef struct s_pipex
 	int		fd[2];
 	int		read_fd;
 	int		write_fd;
+	pid_t *pids;
+	int fd_bo;
 }	t_pipex;
 
 // Utils :
