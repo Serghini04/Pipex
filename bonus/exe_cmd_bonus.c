@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exe_cmd.c                                          :+:      :+:    :+:   */
+/*   exe_cmd_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:55:40 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/16 22:22:53 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/17 23:05:41 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ void	child_run_cmd1_bonus(t_pipex *data, char **env, int i, int ac)
 	else if (dup2(data->fd[1], 1) == -1)
 		(free_struct(data), perror("Dup error "), exit(1));
 	(close(data->fd[1]), close(data->fd[0]));
-	if (execve(data->path_cmd1, data->cmd1, env) == -1)
+	if (execve(data->path_cmd, data->cmd, env) == -1)
 	{
 		free_struct(data);
 		perror("Execve error ");
