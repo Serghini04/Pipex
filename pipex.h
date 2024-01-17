@@ -29,7 +29,6 @@ typedef struct s_pipex
 	int		read_fd;
 	int		write_fd;
 	pid_t *pids;
-	int fd_bo;
 }	t_pipex;
 
 // Utils :
