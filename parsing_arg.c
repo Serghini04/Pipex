@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/17 22:08:23 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 12:44:24 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,15 +62,15 @@ int	open_file(t_pipex *data, int ac, char **av)
 	return (1);
 }
 
-t_pipex	*parsing_arg(t_pipex *data, int i, char **av, char **path)
+void	parsing_arg(t_pipex *data, int i, char **av, char **path)
 {
 	data->cmd = ft_split(av[i], ' ');
 	if (!data->cmd)
-		return (free_struct(data), perror("Split error "), NULL);
+		(free_struct(data), perror("Split error "), exit(1));
 	data->path_cmd = checker_cmd(data->cmd[0], path);
 	if (!data->path_cmd)
-		return (free_struct(data), free_arr(path), perror("Cmd error "), NULL);
-	return (free_arr(path), data);
+		(free_struct(data), free_arr(path), perror("Cmd error "), exit(1));
+	free_arr(path);
 }
 
 char	**first_part(t_pipex *data, int ac, char **av, char **env)

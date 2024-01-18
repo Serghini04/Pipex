@@ -6,13 +6,14 @@
 #    By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 21:05:43 by meserghi          #+#    #+#              #
-#    Updated: 2024/01/17 12:54:08 by meserghi         ###   ########.fr        #
+#    Updated: 2024/01/17 23:29:25 by meserghi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 FILE = pipex.c parsing_arg.c utils/ft_split.c utils/ft_strjoin.c \
 	utils/ft_strlen.c utils/ft_strnstr.c utils/my_free.c utils/checker_path.c\
 	utils/ft_strdup.c
+
 FILE_BONUS = bonus/pipex_bonus.c bonus/exe_cmd_bonus.c parsing_arg.c utils/ft_split.c utils/ft_strjoin.c \
 	utils/ft_strlen.c utils/ft_strnstr.c utils/my_free.c utils/checker_path.c\
 	utils/ft_strdup.c

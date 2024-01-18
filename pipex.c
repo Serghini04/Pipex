@@ -6,13 +6,11 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/17 23:24:32 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 12:56:59 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-// this cmd for leaks fd system(lsof -c pipex);
 
 void	child_run_cmd1(t_pipex *data, char **env)
 {
@@ -75,8 +73,5 @@ int	main(int ac, char **av, char **env)
 		parsing_arg(data, 3, av, path);
 		run_cmd2(data, env);
 	}
-	my_close(data);
-	waitpid(data->pids[1], 0, 0);
-	waitpid(data->pids[0], 0, 0);
-	return (0);
+	(my_close(data), my_wait(data));
 }
