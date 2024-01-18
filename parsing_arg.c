@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 14:56:02 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 16:12:39 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,10 @@ char	**first_part(t_pipex *data, int ac, char **av, char **env)
 	if (!data->pids)
 		(free(data), free_arr(path), perror("malloc error "), exit(1));
 	if (pipe(data->fd) == -1)
-		(free(data), free_arr(path), perror("Pipe error "), exit(1));
+	{
+		(free(data->pids), free_arr(path), free(data));
+		(perror("Pipe error "), exit(1));
+	}
 	data->pos = ac - 3;
 	return (path);
 }
