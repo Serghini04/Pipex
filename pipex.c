@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 15:31:24 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 16:14:40 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,11 +45,6 @@ void	run_cmd2(t_pipex *data, char **env)
 	}
 	else
 		data->pids[1] = p;
-}
-
-void f()
-{
-	system("lsof -c pipex");
 }
 
 int	main(int ac, char **av, char **env)
