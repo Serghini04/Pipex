@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 12:56:59 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:26:56 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	run_cmd2(t_pipex *data, char **env)
 		(close(data->fd[0]), close(data->write_fd), close(data->fd[1]));
 		if (execve(data->path_cmd, data->cmd, env) == -1)
 		{
-			(free(data->path_cmd), free_arr(data->cmd));
+			free_struct(data);
 			(perror("Execve error "), exit(1));
 		}
 	}
@@ -61,7 +61,7 @@ int	main(int ac, char **av, char **env)
 	path = first_part(data, ac, av, env);
 	p = fork();
 	if (p == -1)
-		(free_struct(data), perror("fork error "), exit(1));
+		(free_struct(data), free_arr(path), perror("fork error "), exit(1));
 	if (p == 0)
 	{
 		parsing_arg(data, 2, av, path);
@@ -73,5 +73,5 @@ int	main(int ac, char **av, char **env)
 		parsing_arg(data, 3, av, path);
 		run_cmd2(data, env);
 	}
-	(my_close(data), my_wait(data));
+	(free_struct(data), my_close(data), my_wait(data));
 }

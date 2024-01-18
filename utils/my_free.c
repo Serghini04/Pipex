@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 13:54:51 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 12:52:45 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:15:34 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ void	free_struct(t_pipex *data)
 		free(data->path_cmd);
 	if (data->cmd || *data->cmd)
 		free_arr(data->cmd);
-	//	free(data);
+	if (data->pids)
+		free(data->pids);
+	free(data);
 }
 
 void	my_wait(t_pipex *data)
