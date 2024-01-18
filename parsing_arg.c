@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 13:39:41 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 14:56:02 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	parsing_arg(t_pipex *data, int i, char **av, char **path)
 {
 	data->cmd = ft_split(av[i], ' ');
 	if (!data->cmd || !*data->cmd)
-		(free_struct(data), free_arr(path), perror("Split error "), exit(1));
+		(free_struct(data), free_arr(path), perror("Cmd error "), exit(1));
 	data->path_cmd = checker_cmd(data->cmd[0], path);
 	if (!data->path_cmd)
 		(free_struct(data), free_arr(path), perror("Cmd error "), exit(1));
@@ -81,7 +81,7 @@ char	**first_part(t_pipex *data, int ac, char **av, char **env)
 		(free(data), exit(1));
 	path = find_split_path(env);
 	if (!path)
-		(free(data), perror("Split error "), exit(1));
+		(free(data), my_close(data), perror("Split error "), exit(1));
 	data->pids = malloc(sizeof(pid_t) * (ac - 3));
 	if (!data->pids)
 		(free(data), free_arr(path), perror("malloc error "), exit(1));

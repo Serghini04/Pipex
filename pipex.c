@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 13:26:56 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 14:58:57 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,18 @@ void	run_cmd2(t_pipex *data, char **env)
 		data->pids[1] = p;
 }
 
+void f()
+{
+	system("leaks pipex");
+}
+
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	*data;
 	char	**path;
 	int		p;
 
+	atexit(f);
 	if (ac != 5 || !*env)
 		return (perror("Arg error "), 0);
 	data = malloc(sizeof(t_pipex));
@@ -61,7 +67,7 @@ int	main(int ac, char **av, char **env)
 	path = first_part(data, ac, av, env);
 	p = fork();
 	if (p == -1)
-		(free_struct(data), free_arr(path), perror("fork error "), exit(1));
+		(free_struct(data), free_arr(path), perror("fork "), exit(1));
 	if (p == 0)
 	{
 		parsing_arg(data, 2, av, path);
@@ -73,5 +79,5 @@ int	main(int ac, char **av, char **env)
 		parsing_arg(data, 3, av, path);
 		run_cmd2(data, env);
 	}
-	(free_struct(data), my_close(data), my_wait(data));
+	(free_struct(data), my_wait(data));
 }

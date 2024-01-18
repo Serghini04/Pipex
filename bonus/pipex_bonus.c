@@ -6,20 +6,12 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/17 23:35:36 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 13:51:32 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-void	my_wait(t_pipex *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->pos)
-		waitpid(data->pids[i++], 0, 0);
-}
 void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 {
 	data->cmd = ft_split(av[i], ' ');
