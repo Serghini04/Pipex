@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 21:53:06 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 22:53:33 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void free_bonus(t_pipex *data)
 {
 	if (data->cmd)
-		free(data->cmd);
+		free_arr(data->cmd);
 	if (data->path_cmd)
 		free(data->path_cmd);
 }
@@ -24,7 +24,7 @@ void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 {
 	data->cmd = ft_split(av[i], ' ');
 	if (!data->cmd || !*data->cmd)
-		(perror("Split error "), free_struct(data), my_wait(data), exit(1));
+		(perror("Cmd error "), free_struct(data), my_wait(data), exit(1));
 	data->path_cmd = checker_cmd(data->cmd[0], path);
 	if (!data->path_cmd)
 		(perror("Cmd error "), free_struct(data), my_wait(data), exit(1));
@@ -44,6 +44,7 @@ void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 		child_run_cmd1_bonus(data, env, i, ac);
 	else
 		data->pids[i - 2] = p;
+	free_bonus(data);
 }
 
 void f()
@@ -69,9 +70,9 @@ int main(int ac, char **av, char **env)
 		part_exe_cmd(data, env, i, ac);
 		dup2(data->fd[0], 0);
 		(close(data->fd[0]), close(data->fd[1]));
-		free_bonus(data);
 		i++;
 	}
+	free(data->pids);
 	my_wait(data);
 	free_arr(path);
 	my_close(data);
