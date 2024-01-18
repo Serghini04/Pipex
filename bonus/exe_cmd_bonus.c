@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:55:40 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 18:31:32 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 20:00:58 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	child_run_cmd1_bonus(t_pipex *data, char **env, int i, int ac)
 	}
 	else if (dup2(data->fd[1], 1) == -1)
 		(free_struct(data), perror("Dup error "), exit(1));
+	(close(data->fd[0]), close(data->fd[1]));
 	if (execve(data->path_cmd, data->cmd, env) == -1)
 	{
 		free_struct(data);
