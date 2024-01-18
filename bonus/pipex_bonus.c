@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 13:51:32 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 15:59:17 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@ void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 {
 	data->cmd = ft_split(av[i], ' ');
 	if (!data->cmd || !*data->cmd)
-		(free_struct(data), perror("Split error "), exit(1));
+		(perror("Split error "), exit(1));
 	data->path_cmd = checker_cmd(data->cmd[0], path);
 	if (!data->path_cmd)
-		(free_struct(data), free_arr(path), perror("Cmd error "), my_wait(data), exit(1));
+		(free_arr(path), perror("Cmd error "), exit(1));
 	if (pipe(data->fd) == -1)
-		(free_struct(data), free_arr(path), perror("Pipe error "), my_wait(data), exit(1));
+		(free_arr(path), perror("Pipe error "), exit(1));
 }
 
 void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
@@ -31,12 +31,11 @@ void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 	p = fork();
 
 	if ( p == -1)
-		(free_struct(data), exit(1));
+		(exit(1));
 	if (p == 0)
 		child_run_cmd1_bonus(data, env, i, ac);
 	else
 		data->pids[i - 2] = p;
-	free_struct(data);
 }
 
 int main(int ac, char **av, char **env)
@@ -61,9 +60,6 @@ int main(int ac, char **av, char **env)
 	}
 	i = -1;
 	my_wait(data);
-	free_arr(path);
-	free(data->pids);
-	free(data);
 	(close(data->read_fd), close(data->write_fd));
 	return (0);
 }
