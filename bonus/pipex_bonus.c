@@ -6,13 +6,13 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 22:53:33 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/18 23:03:06 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-void free_bonus(t_pipex *data)
+void	free_bonus(t_pipex *data)
 {
 	if (data->cmd)
 		free_arr(data->cmd);
@@ -34,11 +34,10 @@ void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 
 void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 {
-	int  p;
+	int	p;
 
 	p = fork();
-
-	if ( p == -1)
+	if (p == -1)
 		(exit(1));
 	if (p == 0)
 		child_run_cmd1_bonus(data, env, i, ac);
@@ -47,17 +46,13 @@ void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 	free_bonus(data);
 }
 
-void f()
+int	main(int ac, char **av, char **env)
 {
-	system("leaks pipex_bonus");
-}
-
-int main(int ac, char **av, char **env)
-{
-	t_pipex *data;
+	t_pipex	*data;
 	char	**path;
-	int 	i = 2;
-	atexit(f);
+	int		i;
+
+	i = 2;
 	if (ac <= 5 || !*env)
 		return (perror("Arg error "), 1);
 	data = malloc(sizeof(t_pipex));
