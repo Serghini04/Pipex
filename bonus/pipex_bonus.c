@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 23:03:06 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/19 15:25:21 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,10 @@ void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 		data->pids[i - 2] = p;
 	free_bonus(data);
 }
+void f()
+{
+	system("leaks pipex_bonus");
+}
 
 int	main(int ac, char **av, char **env)
 {
@@ -53,6 +57,7 @@ int	main(int ac, char **av, char **env)
 	int		i;
 
 	i = 2;
+	atexit(f);
 	if (ac <= 5 || !*env)
 		return (perror("Arg error "), 1);
 	data = malloc(sizeof(t_pipex));
