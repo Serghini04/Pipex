@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 13:54:51 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/19 15:23:09 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/20 16:49:28 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ void	my_close(t_pipex *data)
 		close(data->read_fd);
 	if (data->write_fd != -1)
 		close(data->write_fd);
+	close(0);
 	close(data->fd[0]);
 	close(data->fd[1]);
 }

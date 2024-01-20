@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/20 09:53:45 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/20 16:49:21 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,11 @@ void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 	data->path_cmd = checker_cmd(data->cmd[0], path);
 	if (!data->path_cmd)
 		(perror("Cmd error "), my_wait(data), last_free(data, path), exit(1));
-	if (pipe(data->fd) == -1)
-		(perror("Pipe error "), my_wait(data), last_free(data, path), exit(1));
+	if (i != 2)
+	{
+		if (pipe(data->fd) == -1)
+			(perror("Pipe error "), my_wait(data), last_free(data, path), exit(1));
+	}
 }
 
 void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
@@ -55,7 +58,7 @@ void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 }
 void f()
 {
-	system("leaks pipex_bonus");
+	system("lsof -c pipex_bonus");
 }
 
 int	main(int ac, char **av, char **env)
