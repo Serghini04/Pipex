@@ -6,7 +6,7 @@
 #    By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/12 21:05:43 by meserghi          #+#    #+#              #
-#    Updated: 2024/01/17 23:29:25 by meserghi         ###   ########.fr        #
+#    Updated: 2024/01/21 20:49:06 by meserghi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ FILE_BONUS = bonus/pipex_bonus.c bonus/exe_cmd_bonus.c parsing_arg.c utils/ft_sp
 OBJ = ${FILE:.c=.o}
 OBJ_BONUS = ${FILE_BONUS:.c=.o}
 
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -g
 
 NAME = pipex
 

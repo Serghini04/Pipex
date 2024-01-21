@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/20 09:33:34 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/21 21:24:38 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,6 @@ void	run_cmd2(t_pipex *data, char **env)
 			(perror("Execve error "), exit(1));
 		}
 	}
-	else
-		data->pids[1] = p;
 }
 
 int	main(int ac, char **av, char **env)
@@ -69,9 +67,8 @@ int	main(int ac, char **av, char **env)
 	}
 	else
 	{
-		data->pids[0] = p;
 		parsing_arg(data, 3, av, path);
 		run_cmd2(data, env);
 	}
-	(free_struct(data), my_wait(data));
+	(free_struct(data), my_wait());
 }

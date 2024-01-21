@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/15 12:23:16 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/18 23:03:37 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/21 21:04:09 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ int	if_are_path(char *arg)
 	int	i;
 
 	i = 0;
+	if (!arg)
+		return (0);
 	while (arg[i])
 	{
 		if (arg[i] == '/')

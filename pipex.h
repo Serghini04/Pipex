@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:53 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/20 09:48:10 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/21 21:23:58 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,9 @@ typedef struct s_pipex
 {
 	char	**cmd;
 	char	*path_cmd;
-	int		*pids;
 	int		fd[2];
 	int		read_fd;
 	int		write_fd;
-	int		pos;
 }	t_pipex;
 
 // Mandatory part ...
@@ -48,7 +46,7 @@ int		ft_strlen(char *s);
 char	*ft_strnstr(char *haystack, char *needle, int len);
 void	free_arr(char **res);
 void	my_close(t_pipex *data);
-void	my_wait(t_pipex *data);
+void	my_wait();
 void	free_struct(t_pipex *data);
 
 // Bonus part ...

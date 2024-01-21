@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/20 16:49:21 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/21 21:27:46 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,12 @@
 
 void	free_bonus(t_pipex *data)
 {
-	if (data->cmd)
-		free_arr(data->cmd);
-	if (data->path_cmd)
-		free(data->path_cmd);
+	free_arr(data->cmd);
+	free(data->path_cmd);
 }
 
 void	last_free(t_pipex *data, char **path)
 {
-	free(data->pids);
 	free_arr(path);
 	my_close(data);
 	free(data);
@@ -31,15 +28,15 @@ void	last_free(t_pipex *data, char **path)
 void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 {
 	data->cmd = ft_split(av[i], ' ');
-	if (!data->cmd || !*data->cmd)
-		(perror("Cmd error "), my_wait(data), last_free(data, path), exit(1));
+	if (!data->cmd)
+		perror("Cmd error ");
 	data->path_cmd = checker_cmd(data->cmd[0], path);
 	if (!data->path_cmd)
-		(perror("Cmd error "), my_wait(data), last_free(data, path), exit(1));
+		perror("Cmd error ");
 	if (i != 2)
 	{
 		if (pipe(data->fd) == -1)
-			(perror("Pipe error "), my_wait(data), last_free(data, path), exit(1));
+			perror("Pipe error ");
 	}
 }
 
@@ -52,13 +49,11 @@ void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 		(exit(1));
 	if (p == 0)
 		child_run_cmd1_bonus(data, env, i, ac);
-	else
-		data->pids[i - 2] = p;
 	free_bonus(data);
 }
 void f()
 {
-	system("lsof -c pipex_bonus");
+	system("leaks pipex_bonus");
 }
 
 int	main(int ac, char **av, char **env)
@@ -69,7 +64,7 @@ int	main(int ac, char **av, char **env)
 
 	i = 2;
 	atexit(f);
-	if (ac <= 5 || !*env)
+	if (ac < 5 || !*env)
 		return (perror("Arg error "), 1);
 	data = malloc(sizeof(t_pipex));
 	if (!data)
@@ -83,7 +78,7 @@ int	main(int ac, char **av, char **env)
 		(close(data->fd[0]), close(data->fd[1]));
 		i++;
 	}
-	my_wait(data);
+	my_wait();
 	last_free(data, path);
 	return (0);
 }
