@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/21 21:27:46 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/21 23:42:05 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ void	last_free(t_pipex *data, char **path)
 
 void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 {
+
 	data->cmd = ft_split(av[i], ' ');
 	if (!data->cmd)
 		perror("Cmd error ");
@@ -35,6 +36,8 @@ void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
 		perror("Cmd error ");
 	if (i != 2)
 	{
+		dup2(data->fd[0], 0);
+		(close(data->fd[0]), close(data->fd[1]));
 		if (pipe(data->fd) == -1)
 			perror("Pipe error ");
 	}
@@ -63,7 +66,7 @@ int	main(int ac, char **av, char **env)
 	int		i;
 
 	i = 2;
-	atexit(f);
+	//atexit(f);
 	if (ac < 5 || !*env)
 		return (perror("Arg error "), 1);
 	data = malloc(sizeof(t_pipex));
@@ -74,8 +77,6 @@ int	main(int ac, char **av, char **env)
 	{
 		parsing_arg_bonus(data, i, av, path);
 		part_exe_cmd(data, env, i, ac);
-		dup2(data->fd[0], 0);
-		(close(data->fd[0]), close(data->fd[1]));
 		i++;
 	}
 	my_wait();
