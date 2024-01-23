@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 21:13:33 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 22:06:24 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	part_exe_cmd(t_pipex *data, char **av, int i, int ac)
 
 void f()
 {
-	system("leaks pipex_bonus");
+	system("lsof -c pipex_bonus");
 }
 
 int	main(int ac, char **av, char **env)
