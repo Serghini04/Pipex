@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:53 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/21 21:23:58 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 11:48:07 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,13 @@ void	free_arr(char **res);
 void	my_close(t_pipex *data);
 void	my_wait();
 void	free_struct(t_pipex *data);
+int	ft_strncmp(char *s1, char *s2, int n);
 
 // Bonus part ...
 void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path);
 void	part_exe_cmd(t_pipex *data, char **env, int i, int ac);
 void	child_run_cmd1_bonus(t_pipex *data, char **env, int i, int ac);
 void	last_free(t_pipex *data, char **path);
+char	*get_next_line(int fd);
 
 #endif

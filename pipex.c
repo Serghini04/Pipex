@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/21 21:24:38 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 11:41:18 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,8 @@ int	main(int ac, char **av, char **env)
 	if (!data)
 		return (1);
 	path = first_part(data, ac, av, env);
+	if (pipe(data->fd) == -1)
+		(free_arr(path), free(data)), (perror("Pipe error "), exit(1));
 	p = fork();
 	if (p == -1)
 		(free_struct(data), free_arr(path), perror("fork "), exit(1));
@@ -66,9 +68,6 @@ int	main(int ac, char **av, char **env)
 		child_run_cmd1(data, env);
 	}
 	else
-	{
-		parsing_arg(data, 3, av, path);
-		run_cmd2(data, env);
-	}
+		(parsing_arg(data, 3, av, path), run_cmd2(data, env));
 	(free_struct(data), my_wait());
 }

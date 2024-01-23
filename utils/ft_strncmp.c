@@ -1,53 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   my_free.c                                          :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/13 13:54:51 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 10:59:25 by meserghi         ###   ########.fr       */
+/*   Created: 2024/01/23 09:43:08 by meserghi          #+#    #+#             */
+/*   Updated: 2024/01/23 10:40:39 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-void	free_arr(char **res)
+int	ft_strncmp(char *s1, char *s2, int n)
 {
 	int	i;
 
 	i = 0;
-	if (!res)
-		return ;
-	while (res[i])
+	while ((s1[i] || s2[i]) && i < n)
 	{
-		free(res[i]);
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
 		i++;
 	}
-	free(res);
-	res = NULL;
-}
-
-void	my_close(t_pipex *data)
-{
-	if (data->read_fd != -1)
-		close(data->read_fd);
-	if (data->write_fd != -1)
-		close(data->write_fd);
-	close(data->fd[0]);
-	close(data->fd[1]);
-}
-
-void	free_struct(t_pipex *data)
-{
-	free_arr(data->cmd);
-	free(data->path_cmd);
-	my_close(data);
-	free(data);
-}
-
-void	my_wait()
-{
-	while (wait(0) != -1)
-		;
+	return (0);
 }

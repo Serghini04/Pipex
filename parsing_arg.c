@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/21 21:21:30 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 11:39:59 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ char	**find_split_path(char **env)
 	char	**res;
 
 	i = 0;
+	path = NULL;
 	while (env[i])
 	{
 		if (ft_strnstr(env[i], "PATH=", 5))
@@ -55,6 +56,13 @@ char	*checker_cmd(char *str, char **path)
 
 int	open_file(t_pipex *data, int ac, char **av)
 {
+	if (!ft_strncmp("here_doc", av[1], 8))
+	{
+		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
+		if (data->write_fd == -1)
+			return (my_close(data), perror("Open error"), 0);
+		return (1);
+	}
 	data->read_fd = open(av[1], O_RDONLY);
 	data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 	if (data->read_fd == -1 || data->write_fd == -1)
@@ -83,10 +91,5 @@ char	**first_part(t_pipex *data, int ac, char **av, char **env)
 	path = find_split_path(env);
 	if (!path)
 		(free(data), my_close(data), perror("Split error "), exit(1));
-	if (pipe(data->fd) == -1)
-	{
-		(free_arr(path), free(data));
-		(perror("Pipe error "), exit(1));
-	}
 	return (path);
 }
