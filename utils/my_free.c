@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 13:54:51 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 10:59:25 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 12:22:35 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,6 @@ void	free_arr(char **res)
 
 void	my_close(t_pipex *data)
 {
-	if (data->read_fd != -1)
-		close(data->read_fd);
 	if (data->write_fd != -1)
 		close(data->write_fd);
 	close(data->fd[0]);

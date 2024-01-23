@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 12:07:11 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 16:24:15 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ char	*checker_cmd(char *str, char **path)
 		return (ft_strdup(str));
 	while (path[i])
 	{
-		res = ft_strjoin(path[i], str);
+		res = ft_strjoin(path[i], str, 1);
 		if (!res)
 			return (NULL);
 		if (access(res, F_OK | X_OK) == 0)
@@ -56,17 +56,19 @@ char	*checker_cmd(char *str, char **path)
 
 int	open_file(t_pipex *data, int ac, char **av)
 {
-	if (!ft_strncmp("here_doc", av[1], 8))
+	if (!ft_strcmp("here_doc", av[1]))
 	{
 		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (data->write_fd == -1)
-			return (my_close(data), perror("Open error"), 0);
-		return (1);
+			return (my_close(data), perror("Open error "), 0);
 	}
-	data->read_fd = open(av[1], O_RDONLY);
-	data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-	if (data->read_fd == -1 || data->write_fd == -1)
-		return (my_close(data), perror("Open error"), 0);
+	else
+	{
+		data->read_fd = open(av[1], O_RDONLY);
+		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+		if (data->read_fd == -1 || data->write_fd == -1)
+			return (my_close(data), perror("Open error"), 0);
+	}
 	return (1);
 }
 
@@ -75,7 +77,6 @@ void	parsing_arg(t_pipex *data, int i, char **av, char **path)
 	data->cmd = ft_split(av[i], ' ');
 	if (!data->cmd || !*data->cmd)
 		perror("Cmd error ");
-	exit(1);
 	data->path_cmd = checker_cmd(data->cmd[0], path);
 	if (!data->path_cmd)
 		perror("Cmd error ");

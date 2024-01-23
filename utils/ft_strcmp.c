@@ -6,20 +6,20 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/23 09:43:08 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 12:18:34 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 13:18:23 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pipex.h"
 
-int	ft_strncmp(char *s1, char *s2, int n)
+int	ft_strcmp(char *s1, char *s2)
 {
 	int	i;
 
 	i = 0;
 	if (!s1)
 		return (0);
-	while ((s1[i] || s2[i]) && i < n)
+	while (s1[i] || s2[i])
 	{
 		if (s1[i] != s2[i])
 			return (s1[i] - s2[i]);

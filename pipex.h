@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:53 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 11:48:07 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 13:33:37 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,14 @@ char	**first_part(t_pipex *data, int ac, char **av, char **env);
 int		if_are_path(char *arg);
 char	**ft_split(char const *s, char c);
 char	*ft_strdup(char *s1);
-char	*ft_strjoin(char *s1, char *s2);
+char	*ft_strjoin(char *s1, char *s2, int b);
 int		ft_strlen(char *s);
 char	*ft_strnstr(char *haystack, char *needle, int len);
 void	free_arr(char **res);
 void	my_close(t_pipex *data);
 void	my_wait();
 void	free_struct(t_pipex *data);
-int	ft_strncmp(char *s1, char *s2, int n);
+int		ft_strcmp(char *s1, char *s2);
 
 // Bonus part ...
 void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path);

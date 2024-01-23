@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 11:41:18 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 16:29:18 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	child_run_cmd1(t_pipex *data, char **env)
 {
-	if (dup2(data->read_fd, 0) == -1 || dup2(data->fd[1], 1) == -1)
+	if (dup2(data->fd[1], 1) == -1)
 		(free_struct(data), perror("Dup error "), exit(1));
-	(close (data->read_fd), close(data->fd[1]), close(data->fd[0]));
+	(close (data->write_fd), close(data->fd[1]), close(data->fd[0]));
 	if (execve(data->path_cmd, data->cmd, env) == -1)
 	{
 		free_struct(data);
@@ -58,7 +58,7 @@ int	main(int ac, char **av, char **env)
 		return (1);
 	path = first_part(data, ac, av, env);
 	if (pipe(data->fd) == -1)
-		(free_arr(path), free(data)), (perror("Pipe error "), exit(1));
+		(free_arr(path), free(data), perror("Pipe error "), exit(1));
 	p = fork();
 	if (p == -1)
 		(free_struct(data), free_arr(path), perror("fork "), exit(1));

@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 12:00:52 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 16:36:18 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	last_free(t_pipex *data, char **path)
 {
 	free_arr(path);
 	my_close(data);
+	unlink("/tmp/my_here_doc");
 	free(data);
 }
 
@@ -46,10 +47,13 @@ void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 		(exit(1));
 	if (p == 0)
 		child_run_cmd1_bonus(data, env, i, ac);
-	free_bonus(data);
-	if (dup2(data->fd[0], 0) == -1)
-		(perror("Dup error "), exit(1));
-	(close(data->fd[0]), close(data->fd[1]));
+	else
+	{
+		free_bonus(data);
+		if (dup2(data->fd[0], 0) == -1)
+			(perror("Dup error "), exit(1));
+		(close(data->fd[0]), close(data->fd[1]));
+	}
 }
 void f()
 {
@@ -59,18 +63,29 @@ void f()
 void	here_doc_part(char **av, t_pipex *data)
 {
 	char	*read;
-	data->write_fd = open("my_here_doc", O_RDWR | O_CREAT, 0644);
-	if (data->write_fd == -1)
+	char	*stop;
+
+	stop = ft_strjoin(av[2], "\n", 0);
+	data->read_fd = open("/tmp/my_here_doc", O_WRONLY | O_CREAT | O_TRUNC , 0644);
+	if (data->read_fd == -1)
 		(free(data), perror("Open error "), exit(1));
 	while (1)
 	{
 		write(1, "here_doc>>", 10);
 		read = get_next_line(0);
-		if (!ft_strncmp(read, av[2], ft_strlen(av[2])))
+		if (!ft_strcmp(read, stop))
+		{
+			free(read);
 			break;
-		write(data->write_fd, read, ft_strlen(read));
+		}
+		write(data->read_fd, read, ft_strlen(read));
 		free(read);
 	}
+	free(stop);
+	close(data->read_fd);
+	data->read_fd = open("/tmp/my_here_doc", O_RDONLY, 0644);
+	if (data->read_fd == -1)
+		(free(data), perror("Open error "), exit(1));
 }
 
 int	main(int ac, char **av, char **env)
@@ -85,7 +100,7 @@ int	main(int ac, char **av, char **env)
 	data = malloc(sizeof(t_pipex));
 	if (!data)
 		return (1);
-	if (!ft_strncmp("here_doc", av[1], 8))
+	if (!ft_strcmp("here_doc", av[1]))
 	{
 		here_doc_part(av, data);
 		i = 3;
