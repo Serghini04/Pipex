@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 11:39:59 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 12:07:11 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,9 @@ char	**first_part(t_pipex *data, int ac, char **av, char **env)
 
 	if (open_file(data, ac, av) == 0)
 		(free(data), exit(1));
+	if (dup2(data->read_fd, 0) == -1)
+		(free(data), perror("Dup error "), exit(1));
+	close(data->read_fd);
 	path = find_split_path(env);
 	if (!path)
 		(free(data), my_close(data), perror("Split error "), exit(1));
