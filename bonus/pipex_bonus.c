@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 16:36:18 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 20:11:54 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,35 +18,48 @@ void	free_bonus(t_pipex *data)
 	free(data->path_cmd);
 }
 
-void	last_free(t_pipex *data, char **path)
+void	last_free(t_pipex *data)
 {
-	free_arr(path);
 	my_close(data);
-	unlink("/tmp/my_here_doc");
+	unlink("/tmp/my_f");
 	free(data);
 }
 
-void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path)
+void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **env)
 {
+	char	**path;
+
 	data->cmd = ft_split(av[i], ' ');
 	if (!data->cmd)
-		perror("Cmd error ");
-	data->path_cmd = checker_cmd(data->cmd[0], path);
-	if (!data->path_cmd)
-		perror("Cmd error ");
-	if (pipe(data->fd) == -1)
-		(perror("Pipe error "), last_free(data, path), exit(1));
+		(perror("Cmd error 1"), exit(1));
+	if (access(data->cmd[0], F_OK | X_OK) == 0)
+		data->path_cmd = ft_strdup(data->cmd[0]);
+	else
+	{
+		path = find_split_path(env);
+		if (!path)
+			(free(data), my_close(data), perror("Split error "), exit(1));
+		data->path_cmd = checker_cmd(data->cmd[0], path);
+		if (!data->path_cmd)
+			(perror("Cmd error "), exit(1));
+		free_arr(path);
+	}
 }
 
-void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
+void	part_exe_cmd(t_pipex *data, char **av, int i, int ac)
 {
 	int	p;
 
+	if (pipe(data->fd) == -1)
+		(perror("Pipe error "), exit(1));
 	p = fork();
 	if (p == -1)
 		(exit(1));
 	if (p == 0)
-		child_run_cmd1_bonus(data, env, i, ac);
+	{
+		parsing_arg_bonus(data, i, av, data->env);
+		child_run_cmd1_bonus(data, data->env, i, ac);
+	}
 	else
 	{
 		free_bonus(data);
@@ -55,64 +68,32 @@ void	part_exe_cmd(t_pipex *data, char **env, int i, int ac)
 		(close(data->fd[0]), close(data->fd[1]));
 	}
 }
-void f()
-{
-	system("lsof -c pipex_bonus");
-}
-
-void	here_doc_part(char **av, t_pipex *data)
-{
-	char	*read;
-	char	*stop;
-
-	stop = ft_strjoin(av[2], "\n", 0);
-	data->read_fd = open("/tmp/my_here_doc", O_WRONLY | O_CREAT | O_TRUNC , 0644);
-	if (data->read_fd == -1)
-		(free(data), perror("Open error "), exit(1));
-	while (1)
-	{
-		write(1, "here_doc>>", 10);
-		read = get_next_line(0);
-		if (!ft_strcmp(read, stop))
-		{
-			free(read);
-			break;
-		}
-		write(data->read_fd, read, ft_strlen(read));
-		free(read);
-	}
-	free(stop);
-	close(data->read_fd);
-	data->read_fd = open("/tmp/my_here_doc", O_RDONLY, 0644);
-	if (data->read_fd == -1)
-		(free(data), perror("Open error "), exit(1));
-}
 
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	*data;
-	char	**path;
 	int		i;
 
 	i = 2;
 	if (ac < 5 || !*env)
 		return (perror("Arg error "), 1);
-	data = malloc(sizeof(t_pipex));
-	if (!data)
-		return (1);
 	if (!ft_strcmp("here_doc", av[1]))
 	{
+		data = first_part(ac, av, 1, env);
 		here_doc_part(av, data);
 		i = 3;
 	}
-	path = first_part(data, ac, av, env);
+	else
+		data = first_part(ac, av, 0, env);
+	if (dup2(data->read_fd, 0) == -1)
+		(free(data), perror("Dup error "), exit(1));
+	close(data->read_fd);
 	while (i <= ac - 2)
 	{
-		parsing_arg_bonus(data, i, av, path);
-		part_exe_cmd(data, env, i, ac);
+		part_exe_cmd(data, av, i, ac);
 		i++;
 	}
 	my_wait();
-	last_free(data, path);
+	last_free(data);
 	return (0);
 }

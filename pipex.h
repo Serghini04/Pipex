@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:53 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 13:33:37 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 20:14:40 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ typedef struct s_pipex
 {
 	char	**cmd;
 	char	*path_cmd;
+	char	**env;
 	int		fd[2];
 	int		read_fd;
 	int		write_fd;
@@ -33,9 +34,9 @@ void	child_run_cmd1(t_pipex *data, char **env);
 void	run_cmd2(t_pipex *data, char **env);
 char	**find_split_path(char **env);
 char	*checker_cmd(char *str, char **path);
-int		open_file(t_pipex *data, int ac, char **av);
-void	parsing_arg(t_pipex *data, int i, char **av, char **path);
-char	**first_part(t_pipex *data, int ac, char **av, char **env);
+int		open_file(t_pipex *data, int ac, char **av, int b);
+void	parsing_arg(t_pipex *data, int i, char **av, char **env);
+t_pipex	*first_part(int ac, char **av, int b, char **env);
 
 // Utils ...
 int		if_are_path(char *arg);
@@ -46,15 +47,16 @@ int		ft_strlen(char *s);
 char	*ft_strnstr(char *haystack, char *needle, int len);
 void	free_arr(char **res);
 void	my_close(t_pipex *data);
-void	my_wait();
+void	my_wait(void);
 void	free_struct(t_pipex *data);
 int		ft_strcmp(char *s1, char *s2);
 
 // Bonus part ...
-void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **path);
-void	part_exe_cmd(t_pipex *data, char **env, int i, int ac);
+void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **env);
+void	part_exe_cmd(t_pipex *data, char **av, int i, int ac);
 void	child_run_cmd1_bonus(t_pipex *data, char **env, int i, int ac);
-void	last_free(t_pipex *data, char **path);
+void	last_free(t_pipex *data);
 char	*get_next_line(int fd);
+void	here_doc_part(char **av, t_pipex *data);
 
 #endif

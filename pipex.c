@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 16:29:18 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 19:58:03 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	run_cmd2(t_pipex *data, char **env)
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	*data;
-	char	**path;
 	int		p;
 
 	if (ac != 5 || !*env)
@@ -56,18 +55,18 @@ int	main(int ac, char **av, char **env)
 	data = malloc(sizeof(t_pipex));
 	if (!data)
 		return (1);
-	path = first_part(data, ac, av, env);
+	data = first_part(ac, av, 0, env);
 	if (pipe(data->fd) == -1)
-		(free_arr(path), free(data), perror("Pipe error "), exit(1));
+		(free(data), perror("Pipe error "), exit(1));
 	p = fork();
 	if (p == -1)
-		(free_struct(data), free_arr(path), perror("fork "), exit(1));
+		(free_struct(data), perror("fork "), exit(1));
 	if (p == 0)
 	{
-		parsing_arg(data, 2, av, path);
+		parsing_arg(data, 2, av, env);
 		child_run_cmd1(data, env);
 	}
 	else
-		(parsing_arg(data, 3, av, path), run_cmd2(data, env));
+		(parsing_arg(data, 3, av, env), run_cmd2(data, env));
 	(free_struct(data), my_wait());
 }

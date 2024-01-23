@@ -6,13 +6,13 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 17:43:38 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 16:49:03 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 20:12:49 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		ft_check(char *str)
+int	ft_check(char *str)
 {
 	if (!str)
 		return (0);

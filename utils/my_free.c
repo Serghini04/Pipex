@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 13:54:51 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 12:22:35 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/23 20:16:26 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	free_struct(t_pipex *data)
 	free(data);
 }
 
-void	my_wait()
+void	my_wait(void)
 {
 	while (wait(0) != -1)
 		;
