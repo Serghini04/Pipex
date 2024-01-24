@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:55:40 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 20:12:18 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/24 13:03:18 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	here_doc_part(char **av, t_pipex *data)
 	{
 		write(1, "here_doc>>", 10);
 		read = get_next_line(0);
-		fprintf(stderr, ">>%s<<\n", read);
 		if (!ft_strcmp(read, stop))
 		{
 			free(read);

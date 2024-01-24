@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/14 22:01:21 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 22:06:24 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/24 13:03:44 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,6 @@ void	part_exe_cmd(t_pipex *data, char **av, int i, int ac)
 	}
 }
 
-void f()
-{
-	system("lsof -c pipex_bonus");
-}
-
 int	main(int ac, char **av, char **env)
 {
 	t_pipex	*data;
@@ -98,7 +93,6 @@ int	main(int ac, char **av, char **env)
 		part_exe_cmd(data, av, i, ac);
 		i++;
 	}
-	atexit(f);
 	my_wait();
 	last_free(data);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 22:10:44 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/24 16:36:11 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,14 @@ int	open_file(t_pipex *data, int ac, char **av, int b)
 	{
 		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (data->write_fd == -1)
-			return (my_close(data), perror("Open error "), 0);
+			return (perror("Open error "), 0);
 	}
 	else
 	{
 		data->read_fd = open(av[1], O_RDONLY);
 		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (data->read_fd == -1 || data->write_fd == -1)
-			return (my_close(data), perror("Open error"), 0);
+			return (perror("Open error "), my_close(data), 0);
 	}
 	return (1);
 }
@@ -76,7 +76,7 @@ void	parsing_arg(t_pipex *data, int i, char **av, char **env)
 
 	data->cmd = ft_split(av[i], ' ');
 	if (!data->cmd || !*data->cmd)
-		perror("Cmd error ");
+		(perror("Cmd error "), my_close(data), free(data), exit(1));
 	if (access(data->cmd[0], F_OK | X_OK) == 0)
 	{
 		data->path_cmd = ft_strdup(data->cmd[0]);
@@ -86,10 +86,10 @@ void	parsing_arg(t_pipex *data, int i, char **av, char **env)
 	{
 		path = find_split_path(env);
 		if (!path)
-			(free(data), my_close(data), perror("Split error "), exit(1));
+			(free_struct(data), perror("path error "), exit(1));
 		data->path_cmd = checker_cmd(data->cmd[0], path);
 		if (!data->path_cmd)
-			perror("Cmd error ");
+			(perror("Cmd error "), free_arr(path), free_struct(data), exit(1));
 		free_arr(path);
 	}
 }

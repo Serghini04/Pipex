@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:31 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/23 19:58:03 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/24 16:54:33 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 void	child_run_cmd1(t_pipex *data, char **env)
 {
-	if (dup2(data->fd[1], 1) == -1)
+	if (dup2(data->fd[1], 1) == -1 || dup2(data->read_fd, 0) == -1)
 		(free_struct(data), perror("Dup error "), exit(1));
-	(close (data->write_fd), close(data->fd[1]), close(data->fd[0]));
+	my_close(data);
 	if (execve(data->path_cmd, data->cmd, env) == -1)
 	{
 		free_struct(data);
@@ -35,8 +35,8 @@ void	run_cmd2(t_pipex *data, char **env)
 	if (p == 0)
 	{
 		if (dup2(data->fd[0], 0) == -1 || dup2(data->write_fd, 1) == -1)
-			(free_arr(data->cmd), perror("Dup error "), exit(1));
-		(close(data->fd[0]), close(data->write_fd), close(data->fd[1]));
+			(free_struct(data), perror("Dup error "), exit(1));
+		my_close(data);
 		if (execve(data->path_cmd, data->cmd, env) == -1)
 		{
 			free_struct(data);
@@ -52,15 +52,12 @@ int	main(int ac, char **av, char **env)
 
 	if (ac != 5 || !*env)
 		return (perror("Arg error "), 0);
-	data = malloc(sizeof(t_pipex));
-	if (!data)
-		return (1);
 	data = first_part(ac, av, 0, env);
 	if (pipe(data->fd) == -1)
-		(free(data), perror("Pipe error "), exit(1));
+		(my_close(data), free(data), perror("Pipe error "), exit(1));
 	p = fork();
 	if (p == -1)
-		(free_struct(data), perror("fork "), exit(1));
+		(my_close(data), free(data), perror("fork error "), exit(1));
 	if (p == 0)
 	{
 		parsing_arg(data, 2, av, env);
