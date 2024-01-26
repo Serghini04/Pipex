@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/12 17:36:47 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/24 16:36:11 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/26 16:39:55 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,31 +52,13 @@ char	*checker_cmd(char *str, char **path)
 	return (NULL);
 }
 
-int	open_file(t_pipex *data, int ac, char **av, int b)
-{
-	if (b == 1)
-	{
-		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
-		if (data->write_fd == -1)
-			return (perror("Open error "), 0);
-	}
-	else
-	{
-		data->read_fd = open(av[1], O_RDONLY);
-		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-		if (data->read_fd == -1 || data->write_fd == -1)
-			return (perror("Open error "), my_close(data), 0);
-	}
-	return (1);
-}
-
 void	parsing_arg(t_pipex *data, int i, char **av, char **env)
 {
 	char	**path;
 
 	data->cmd = ft_split(av[i], ' ');
 	if (!data->cmd || !*data->cmd)
-		(perror("Cmd error "), my_close(data), free(data), exit(1));
+		(perror("Cmd error "), my_close(data, i), free(data), exit(1));
 	if (access(data->cmd[0], F_OK | X_OK) == 0)
 	{
 		data->path_cmd = ft_strdup(data->cmd[0]);
@@ -86,23 +68,31 @@ void	parsing_arg(t_pipex *data, int i, char **av, char **env)
 	{
 		path = find_split_path(env);
 		if (!path)
-			(free_struct(data), perror("path error "), exit(1));
+			(free_arr(data->cmd), my_close(data, i), perror("path "), exit(1));
 		data->path_cmd = checker_cmd(data->cmd[0], path);
 		if (!data->path_cmd)
-			(perror("Cmd error "), free_arr(path), free_struct(data), exit(1));
+		{
+			perror("Cmd error ");
+			(free_arr(path), free_struct(data, i), exit(1));
+		}
 		free_arr(path);
 	}
 }
 
-t_pipex	*first_part(int ac, char **av, int b, char **env)
+t_pipex	*first_part(int ac, char **env, int *p)
 {
 	t_pipex	*data;
 
+	if (ac != 5 || !*env)
+		(perror("Arg error "), exit(1));
 	data = malloc(sizeof(t_pipex));
 	if (!data)
 		(perror("malloc error "), exit(1));
-	if (open_file(data, ac, av, b) == 0)
-		(free(data), exit(1));
+	if (pipe(data->fd) == -1)
+		(free(data), perror("Pipe error "), exit(1));
+	*p = fork();
+	if (*p == -1)
+		(free(data), perror("fork error "), exit(1));
 	data->env = env;
 	return (data);
 }
