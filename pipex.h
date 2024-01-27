@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:53 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/27 17:40:04 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/27 17:55:20 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,5 +60,6 @@ void	here_doc_part(char **av, t_pipex *data);
 void	last_free(t_pipex *data, char *cmp);
 void	open_close(t_pipex *data);
 int		start(t_pipex *data);
+char	*get_next_line(int fd);
 
 #endif
