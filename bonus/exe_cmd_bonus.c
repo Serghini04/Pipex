@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:55:40 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/26 17:40:52 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/27 17:03:41 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,17 +34,27 @@ void	open_file(t_pipex *data, int ac, char **av, char *check)
 	{
 		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_APPEND, 0644);
 		if (data->write_fd == -1)
-			(perror("Open error "), my_close(data, 2), free(data), exit(1));
+			(perror("Open error "), my_close(data, 0), free(data), exit(1));
 	}
 	else
 	{
 		data->write_fd = open(av[ac - 1], O_CREAT | O_WRONLY | O_TRUNC, 0644);
 		if (data->write_fd == -1)
-			(perror("Open error "), my_close(data, 2), free(data), exit(1));
+			(perror("Open error "), my_close(data, 0), free(data), exit(1));
 	}
 	if (dup2(data->write_fd, 1) == -1)
-		(perror("dup error "), my_close(data, 2), free(data), exit(1));
+		(perror("dup error "), my_close(data, 3), free(data), exit(1));
 	close(data->write_fd);
+}
+
+void	open_close(t_pipex *data)
+{
+	data->read_fd = open("/tmp/my_f", O_RDONLY, 0644);
+	if (data->read_fd == -1)
+		(free(data), perror("Open error "), exit(1));
+	if (dup2(data->read_fd, 0) == -1)
+		(perror("Dup error "), free(data), exit(1));
+	close(data->read_fd);
 }
 
 void	here_doc_part(char **av, t_pipex *data)
@@ -68,9 +78,6 @@ void	here_doc_part(char **av, t_pipex *data)
 		write(data->read_fd, read, ft_strlen(read));
 		free(read);
 	}
-	free(stop);
-	close(data->read_fd);
-	data->read_fd = open("/tmp/my_f", O_RDONLY, 0644);
-	if (data->read_fd == -1)
-		(free(data), perror("Open error "), exit(1));
+	(free(stop), close(data->read_fd));
+	open_close(data);
 }

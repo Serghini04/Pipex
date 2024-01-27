@@ -6,7 +6,7 @@
 /*   By: meserghi <meserghi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/10 19:25:53 by meserghi          #+#    #+#             */
-/*   Updated: 2024/01/26 18:12:27 by meserghi         ###   ########.fr       */
+/*   Updated: 2024/01/27 17:25:15 by meserghi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	parsing_arg_bonus(t_pipex *data, int i, char **av, char **env);
 void	part_exe_cmd(t_pipex *data, char **av, int i, int ac);
 void	open_file(t_pipex *data, int ac, char **av, char *check);
 void	child_run_cmd1_bonus(t_pipex *data, char **env, int i, int ac);
-void	last_free(t_pipex *data);
+void	last_free(t_pipex *data, char *cmp);
 char	*get_next_line(int fd);
 void	here_doc_part(char **av, t_pipex *data);
 
